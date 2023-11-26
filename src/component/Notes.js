@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import noteContext from '../context/notes/noteContext';
 import Noteitem from './Noteitem';
 import AddNote from './AddNote';
-const Notes = () => {
+const Notes = (props) => {
     const context = useContext(noteContext);
     const { notes, getNotes, editNote } = context;
 
@@ -10,13 +10,15 @@ const Notes = () => {
     const handleClick = (e) => {
         console.log("Updating the note...", note)
         editNote(note.id, note.etitle, note.edescription, note.etag)
-        refClose.current.click()
+        refClose.current.click();
+        props.showAlert("Updated Successful", "success")
     }
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value })
     }
 
     useEffect(() => {
+        if(localStorage.getItem('token'))
         getNotes()
         // eslint-disable-next-line
     }, [])
@@ -26,11 +28,11 @@ const Notes = () => {
 
     const updateNote = (currentNote) => {
         ref.current.click()
-        setNote({etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag, id: currentNote._id})
+        setNote({ etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag, id: currentNote._id });
     }
     return (
         <>
-            <AddNote />
+            <AddNote showAlert={props.showAlert} />
             <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Launch demo modal
             </button>
@@ -59,7 +61,7 @@ const Notes = () => {
                         </div>
                         <div className="modal-footer">
                             <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button disabled={note.etitle.length<5 || note.edescription.length<5} onClick={handleClick} type="button" className="btn btn-warning">Update Note</button>
+                            <button disabled={note.etitle.length<5 || note.edescription.length<5}  onClick={handleClick}  type="button" className="btn btn-warning">Update Note</button>
                         </div>
                     </div>
                 </div>
@@ -70,7 +72,7 @@ const Notes = () => {
                 {notes.length === 0 && "No Notes to Display"}
                 </div>
                 {notes.map((note) => {
-                    return <Noteitem key={note._id} updateNote={updateNote} note={note} />
+                    return <Noteitem showAlert={props.showAlert} key={note._id} updateNote={updateNote} note={note} />
                 })}
             </div>
         </>

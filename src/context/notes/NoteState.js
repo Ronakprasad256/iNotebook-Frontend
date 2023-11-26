@@ -59,7 +59,7 @@ const NoteState = (props) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU1ZGYxMDg4YzQzZTYxY2VkZmE4OTdlIn0sImlhdCI6MTcwMDg5NTE5Mn0.1YfCCljys6gQTKfT_VDABGvuP7hshxADSmcw-a2DeME"
+        "auth-token": localStorage.getItem('token')
       },
       body: JSON.stringify({title, description, tag})
     });
